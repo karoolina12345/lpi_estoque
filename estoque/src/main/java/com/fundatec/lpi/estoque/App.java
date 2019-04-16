@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.fundatec.lpi.estoque.dao.ItemDAO;
+import com.fundatec.lpi.estoque.domain.Estoque;
 import com.fundatec.lpi.estoque.domain.Item;
 import com.fundatec.lpi.estoque.service.TransformaNomeMaiuscula;
 import com.fundatec.lpi.estoque.service.TransformaNomeMinuscula;
@@ -17,6 +18,7 @@ public class App {
 		TransformaNomeMinuscula transformaMin = new TransformaNomeMinuscula();
 		Item item = new Item(null);
 		ItemDAO itemDAO = new ItemDAO();
+		Estoque estoque = new Estoque();
 		List<Item> itens = new ArrayList<Item>();
 
 		int comando = 0;
@@ -96,14 +98,23 @@ public class App {
 			case 4: {
 				System.out.println("");
 				System.out.println("opção 4: Listar itens e brindes");
-				
+
 				itens = itemDAO.listAll();
-				System.out.println(itens);
+				for (Item item1 : itens) {
+					System.out.format("ID: %s ", item1.getId());
+					System.out.format("Nome: %s ", item1.getNome());
+					System.out.format("Preço: R$ %s\n", item1.getPreco());
+				}
+
 				break;
 			}
 			case 5: {
 				System.out.println("");
 				System.out.println("opção 5: Mostrar custo total");
+				float somaPrecos = 0;
+				itens = itemDAO.listAll();
+				somaPrecos = estoque.custoTotal(itens);
+				System.out.format("Preço total: %s\n\n", somaPrecos);
 				break;
 			}
 			case 0: {

@@ -53,7 +53,7 @@ public class ItemDAO implements BaseDAO<Item> {
 			// do banco, usuário e senha
 			String connString = "jdbc:mysql://localhost/fundatec?user=root&password=";
 			Connection conn = DriverManager.getConnection(connString);
-			
+
 			String query = "SELECT * FROM itens WHERE id = ?";
 
 			PreparedStatement preparedStmt = conn.prepareStatement(query);
@@ -65,12 +65,10 @@ public class ItemDAO implements BaseDAO<Item> {
 				idTeste = resultSet.getInt("id");
 				nomeTeste = resultSet.getString("nome");
 			}
-			
-			
-			if(idTeste > 0) {
+
+			if (idTeste > 0) {
 				System.out.format("id %s encontrado, pertence ao %s \n", idTeste, nomeTeste);
-			}
-			else{
+			} else {
 				System.out.println("id não encontrado");
 				idTeste = 0;
 			}
@@ -92,7 +90,6 @@ public class ItemDAO implements BaseDAO<Item> {
 			// do banco, usuário e senha
 			String connString = "jdbc:mysql://localhost/fundatec?user=root&password=";
 			Connection conn = DriverManager.getConnection(connString);
-			
 
 			// query de editar
 			String query = "UPDATE itens SET nome = ? , preco = ? where id=?";
@@ -124,10 +121,10 @@ public class ItemDAO implements BaseDAO<Item> {
 			// do banco, usuário e senha
 			String connString = "jdbc:mysql://localhost/fundatec?user=root&password=";
 			Connection conn = DriverManager.getConnection(connString);
-			
+
 			// Query para deletar
 			String query = "DELETE FROM itens WHERE id = ?";
-			
+
 			PreparedStatement preparedStmt = conn.prepareStatement(query);
 			preparedStmt.setInt(1, Id);
 			preparedStmt.execute();
@@ -158,23 +155,22 @@ public class ItemDAO implements BaseDAO<Item> {
 
 			// Nossa query
 			String query = "SELECT * FROM itens";
-			
+
 			// Roda a query e pega o retorno
 			ResultSet resultSet = statement.executeQuery(query);
-			
-			// Itera no resultado, imprimindo os valores
-						while (resultSet.next()) {
-							int id = resultSet.getInt("id");
-							String nome = resultSet.getString("nome");
-							float preco = resultSet.getFloat("preco");
-							Item item = new Item();
-							item.setId(id);
-							item.setNome(nome);
-							item.setPreco(preco);
-							itens.add(item);
 
-							System.out.format("%s - %s - %s\n", id, nome, preco);
-						}
+			// Itera no resultado, imprimindo os valores
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String nome = resultSet.getString("nome");
+				float preco = resultSet.getFloat("preco");
+				Item item = new Item();
+				item.setId(id);
+				item.setNome(nome);
+				item.setPreco(preco);
+				itens.add(item);
+
+			}
 
 			conn.close();
 
@@ -182,8 +178,54 @@ public class ItemDAO implements BaseDAO<Item> {
 
 			e.printStackTrace();
 		}
-		
+
 		return itens;
 	}
+	
+	
+	
+
+	public List<Item> PrecoTotal() throws IOException {
+		List<Item> precos = new ArrayList<Item>();
+		try {
+			// Carrega driver do MySQL (cada banco tem o seu driver)
+			String mysqlDriver = "com.mysql.cj.jdbc.Driver";
+			Class.forName(mysqlDriver);
+
+			// Cria uma conexão com o banco de dados, passando o nome
+			// do banco, usuário e senha
+			String connString = "jdbc:mysql://localhost/fundatec?user=root&password=";
+			Connection conn = DriverManager.getConnection(connString);
+
+			// Statements permitem executar queries (SQL) no banco
+			Statement statement = conn.createStatement();
+
+			// Nossa query
+			String query = "SELECT preco FROM itens";
+
+			// Roda a query e pega o retorno
+			ResultSet resultSet = statement.executeQuery(query);
+
+			// Itera no resultado, imprimindo os valores
+			while (resultSet.next()) {
+				
+				float preco = resultSet.getFloat("preco");
+				Item item = new Item();
+				item.setPreco(preco);
+				precos.add(item);
+				System.out.format("Preço: %s", item.getPreco());
+
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+
+		return precos;
+	}
+
 
 }
