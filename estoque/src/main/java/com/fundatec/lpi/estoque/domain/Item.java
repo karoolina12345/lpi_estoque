@@ -25,9 +25,6 @@ public class Item {
 		this.nome = nome;
 	}
 
-	public Item() {
-		
-	}
 
 	public float getPreco() {
 		return preco;
